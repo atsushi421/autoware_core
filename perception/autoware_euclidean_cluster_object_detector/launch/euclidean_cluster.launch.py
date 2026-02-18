@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ament_index_python.packages import get_package_prefix
 import launch
 from launch.actions import DeclareLaunchArgument
 from launch.actions import OpaqueFunction
@@ -24,6 +25,14 @@ from launch_ros.actions import LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
 from launch_ros.substitutions import FindPackageShare
 import yaml
+
+
+def _use_agnocast():
+    try:
+        get_package_prefix("agnocast_components")
+        return True
+    except Exception:
+        return False
 
 
 def launch_setup(context, *args, **kwargs):
@@ -72,8 +81,8 @@ def launch_setup(context, *args, **kwargs):
     container = ComposableNodeContainer(
         name="euclidean_cluster_container",
         namespace=ns,
-        package="rclcpp_components",
-        executable="component_container",
+        package="agnocast_components" if _use_agnocast() else "rclcpp_components",
+        executable="agnocast_component_container_cie" if _use_agnocast() else "component_container",
         composable_node_descriptions=[],
         output="screen",
         condition=UnlessCondition(LaunchConfiguration("use_pointcloud_container")),

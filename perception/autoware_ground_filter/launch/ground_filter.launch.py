@@ -14,8 +14,17 @@
 
 import os
 
+from ament_index_python.packages import get_package_prefix
 from ament_index_python.packages import get_package_share_directory
 import launch
+
+
+def _use_agnocast():
+    try:
+        get_package_prefix("agnocast_components")
+        return True
+    except Exception:
+        return False
 from launch.actions import DeclareLaunchArgument
 from launch.actions import GroupAction
 from launch.actions import OpaqueFunction
@@ -69,8 +78,8 @@ def launch_setup(context, *args, **kwargs):
     container = ComposableNodeContainer(
         name="ground_filter_container",
         namespace="",
-        package="rclcpp_components",
-        executable="component_container",
+        package="agnocast_components" if _use_agnocast() else "rclcpp_components",
+        executable="agnocast_component_container_cie" if _use_agnocast() else "component_container",
         composable_node_descriptions=nodes,
         output="screen",
         condition=LaunchConfigurationEquals("container", ""),

@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.14)
 project(autoware_stop_filter)
 
 find_package(autoware_cmake REQUIRED)
+if(DEFINED ENV{ENABLE_AGNOCAST})
+  find_package(agnocast_components REQUIRED)
+endif()
 autoware_package()
 
 ament_auto_add_library(${PROJECT_NAME} SHARED
@@ -16,11 +19,19 @@ target_link_libraries(${PROJECT_NAME}_ros
   ${PROJECT_NAME}
 )
 
-rclcpp_components_register_node(${PROJECT_NAME}_ros
-  PLUGIN "autoware::stop_filter::StopFilterNode"
-  EXECUTABLE ${PROJECT_NAME}_node
-  EXECUTOR SingleThreadedExecutor
-)
+if(agnocast_components_FOUND)
+  agnocast_components_register_node(${PROJECT_NAME}_ros
+    PLUGIN "autoware::stop_filter::StopFilterNode"
+    EXECUTABLE ${PROJECT_NAME}_node
+    EXECUTOR CallbackIsolatedAgnocastExecutor
+  )
+else()
+  rclcpp_components_register_node(${PROJECT_NAME}_ros
+    PLUGIN "autoware::stop_filter::StopFilterNode"
+    EXECUTABLE ${PROJECT_NAME}_node
+    EXECUTOR SingleThreadedExecutor
+  )
+endif()
 
 if(BUILD_TESTING)
   ament_add_ros_isolated_gtest(test_stop_filter_node

@@ -19,6 +19,7 @@
   <depend>nav_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <build_depend condition="$ENABLE_AGNOCAST == 1">agnocast_components</build_depend>
   <depend>tf2</depend>
 
   <test_depend>ament_cmake_ros</test_depend>

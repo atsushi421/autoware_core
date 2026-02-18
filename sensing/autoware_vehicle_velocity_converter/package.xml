@@ -17,6 +17,7 @@
   <depend>geometry_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <build_depend condition="$ENABLE_AGNOCAST == 1">agnocast_components</build_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>autoware_lint_common</test_depend>
 

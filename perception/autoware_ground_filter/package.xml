@@ -32,6 +32,7 @@
   <depend>pcl_ros</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <build_depend condition="$ENABLE_AGNOCAST == 1">agnocast_components</build_depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tf2</depend>
